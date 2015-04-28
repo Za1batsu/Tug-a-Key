@@ -2,6 +2,7 @@
 var gameSett = {
   width: window.innerWidth,
   height: window.innerHeight,
+  auto: true,
   gameOver: false,
   key1: 0,
   key2: 0,
@@ -146,6 +147,7 @@ var pull = function(node, link, toLeft) {
     }
   }else{
      node.attr('cx', function(d) { return d.x+=gameSett.pull; } )
+         .attr('cy', function(d) { return d.y+=(Math.random()-0.5)*2; } )
          .call(force.drag);
 
     force.stop();
@@ -176,6 +178,21 @@ var update = function(){
   changeKey();
 };
 
+var autoUpdate = function(){
+  if(!gameSett.gameOver){
+    var rand1 = Math.floor(Math.random()*2);
+    var rand2 = Math.floor(Math.random()*2);
+    if(rand1 === 0){
+      gameSett.linkLoss = Math.floor(Math.random()*20+15);
+      pull(d3.select('.player1'), d3.select('.link2'), true);    
+    }
+    if(rand2===0){
+      gameSett.linkLoss = Math.floor(Math.random()*20+15);
+      pull(d3.select('.player2'), d3.select('.link1'), false);
+    }
+  } 
+};
+
 
 
 var init = function(){
@@ -204,7 +221,11 @@ var init = function(){
 
 init();
 
-setInterval(update, 5000);
+if(!gameSett.auto) {
+  setInterval(update, 5000);
+}else{
+  setInterval(autoUpdate, 100);
+}
 
 
 
