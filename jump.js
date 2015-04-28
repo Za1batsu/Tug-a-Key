@@ -2,7 +2,8 @@
 var gameSett = {
   width: window.innerWidth,
   height: window.innerHeight,
-  auto: true,
+  auto: false,
+  hideKey2: false,
   gameOver: false,
   key1: 0,
   key2: 0,
@@ -48,14 +49,16 @@ var svg = d3.select('body').append('svg')
           .attr('width', gameSett.width)
           .attr('height', gameSett.height);
 
-var leftKey = svg.append('text') 
+if(!gameSett.auto){
+  var leftKey = svg.append('text') 
                  .attr('x', gameSett.width/6)
                  .attr('y', gameSett.height/6)
                  .attr('class', 'leftKey');
-var rightKey = svg.append('text') 
+  var rightKey = svg.append('text') 
                  .attr('x', (gameSett.width/6)*4.5)
                  .attr('y', gameSett.height/6)
                  .attr('class', 'rightKey');
+}
 
 function randomKey(prevKeyCode) {
   var codes = Object.keys(keyCodes);
@@ -74,15 +77,16 @@ var changeKey = function(){
       return keyCodes[gameSett.key1];} );
   d3.select('.rightKey')
     .text(function() {
-      gameSett.key2 = randomKey(gameSett.key2);
-      return keyCodes[gameSett.key2];} );
+      if(!gameSett.hideKey2){
+        gameSett.key2 = randomKey(gameSett.key2);
+        return keyCodes[gameSett.key2];
+      }else{ return String.fromCharCode(0x30A0 + Math.random() * (0x30FF-0x30A0+1)); }
+    });
 
   while(gameSett.key1 === gameSett.key2){
     changeKey();
   }
 };
-
-changeKey();
 
 var link = svg.selectAll('.link');
 var node = svg.selectAll('.node');
@@ -109,6 +113,9 @@ d3.select('body')
     }else if(d3.event.keyCode.toString() === gameSett.key2 && !gameSett.keyPress2){
       gameSett.keyPress2 = true;
       pull(d3.select('.player2'), d3.select('.link1'), false);
+    } if(d3.event.keyCode === 192){
+      gameSett.hideKey2 = !gameSett.hideKey2;
+      changeKey();
     }
   }
 }).on('keyup', function(){
@@ -196,6 +203,11 @@ var autoUpdate = function(){
 
 
 var init = function(){
+
+  if(!gameSett.auto){
+    changeKey();
+  }
+
   force
       .nodes(gameSett.nodes)
       .links(gameSett.links)
