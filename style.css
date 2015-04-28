@@ -1,0 +1,35 @@
+.goal{
+  fill: none;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.player1{
+  fill: blue;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.player2{
+  fill: green;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.link1{
+  stroke: blue;
+  stroke-width: 2px;
+}
+.link2{
+  stroke: green;
+  stroke-width: 2px;
+}
+
+.leftKey{
+  font-size: 100px;
+  font-style: bold;
+}
+.rightKey{
+  font-size: 100px;
+  font-style: bold;
+}
